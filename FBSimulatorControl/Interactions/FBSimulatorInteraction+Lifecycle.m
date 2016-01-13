@@ -45,8 +45,9 @@
   NSParameterAssert(configuration);
 
   return [self interactWithShutdownSimulator:^ BOOL (NSError **error, FBSimulator *simulator) {
-    // Fetch the Boot arguments
+    // Fetch the Boot arguments & environment
     NSError *innerError = nil;
+    NSDictionary *environment = @{ FBSimulatorControlSimulatorLaunchEnvironmentSimulatorUDID : simulator.udid };
     NSArray *arguments = [configuration xcodeSimulatorApplicationArgumentsForSimulator:simulator error:&innerError];
     if (!arguments) {
       return [[[FBSimulatorError
@@ -55,22 +56,23 @@
         failBool:error];
     }
 
-    // Construct and start the task.
-    id<FBTask> task = [[[[[FBTaskExecutor.sharedInstance
-      withLaunchPath:FBSimulatorApplication.xcodeSimulator.binary.path]
-      withArguments:[arguments copy]]
-      withEnvironmentAdditions:@{ FBSimulatorControlSimulatorLaunchEnvironmentSimulatorUDID : simulator.udid }]
-      build]
-      startAsynchronously];
-
-    [simulator.eventSink terminationHandleAvailable:task];
-
-    // Expect no immediate error.
-    if (task.error) {
+    // The NSWorkspace API allows for arguments & environment to be provided to the launched application
+    // Additionally, multiple Apps of the same application can be launched with the NSWorkspaceLaunchNewInstance option.
+    NSURL *applicationURL = [NSURL fileURLWithPath:FBSimulatorApplication.xcodeSimulator.path];
+    NSDictionary *appLaunchConfiguration = @{
+      NSWorkspaceLaunchConfigurationArguments : arguments,
+      NSWorkspaceLaunchConfigurationEnvironment : environment,
+    };
+    NSRunningApplication *application = [NSWorkspace.sharedWorkspace
+      launchApplicationAtURL:applicationURL
+      options:NSWorkspaceLaunchDefault | NSWorkspaceLaunchNewInstance | NSWorkspaceLaunchWithoutActivation
+      configuration:appLaunchConfiguration
+      error:&innerError];
+    if (!application) {
       return [[[[FBSimulatorError
-        describe:@"Failed to Launch Simulator Process"]
-        causedBy:task.error]
+        describeFormat:@"Failed to launch simulator application %@ with configuration %@", applicationURL, appLaunchConfiguration]
         inSimulator:simulator]
+        causedBy:innerError]
         failBool:error];
     }
 
@@ -82,7 +84,6 @@
         inSimulator:simulator]
         failBool:error];
     }
-
 
     // Expect the launch info for the process to exist.
     FBProcessQuery *processQuery = simulator.processQuery;
@@ -103,7 +104,6 @@
         inSimulator:simulator]
         failBool:error];
     }
-    [simulator.eventSink simulatorDidLaunch:launchdSimProcess];
 
     // Waitng for all required processes to start
     NSSet *requiredProcessNames = simulator.requiredProcessNamesToVerifyBooted;
@@ -117,9 +117,7 @@
         inSimulator:simulator]
         failBool:error];
     }
-
-    // Pass on the success to the event sink.
-    [simulator.eventSink containerApplicationDidLaunch:containerApplication];
+    [simulator.eventSink simulatorDidLaunch:launchdSimProcess];
 
     return YES;
   }];
