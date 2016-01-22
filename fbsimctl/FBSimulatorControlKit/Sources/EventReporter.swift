@@ -56,6 +56,14 @@ public class HumanReadableEventReporter : NSObject, EventReporter {
 
   }
 
+  public func framebufferDidStart(framebuffer: FBSimulatorFramebuffer!) {
+
+  }
+
+  public func framebufferDidTerminate(framebuffer: FBSimulatorFramebuffer!, expected: Bool) {
+
+  }
+
   public func simulatorDidLaunch(launchdSimProcess: FBProcessInfo!) {
 
   }
@@ -151,6 +159,14 @@ public class JSONEventReporter : NSObject, EventReporter {
 
   public func containerApplicationDidTerminate(applicationProcess: FBProcessInfo!, expected: Bool) {
     self.simulatorEvent()
+  }
+
+  public func framebufferDidStart(framebuffer: FBSimulatorFramebuffer!) {
+
+  }
+
+  public func framebufferDidTerminate(framebuffer: FBSimulatorFramebuffer!, expected: Bool) {
+
   }
 
   public func simulatorDidLaunch(launchdSimProcess: FBProcessInfo!) {

@@ -13,6 +13,8 @@ NSString *const FBSimulatorDidLaunchNotification = @"FBSimulatorDidLaunchNotific
 NSString *const FBSimulatorDidTerminateNotification = @"FBSimulatorDidTerminateNotification";
 NSString *const FBSimulatorContainerDidLaunchNotification = @"FBSimulatorContainerDidLaunchNotification";
 NSString *const FBSimulatorContainerDidTerminateNotification = @"FBSimulatorContainerDidTerminateNotification";
+NSString *const FBSimulatorFramebufferDidStartNotification = @"FBSimulatorFramebufferDidStartNotification";
+NSString *const FBSimulatorFramebufferDidTerminateNotification = @"FBSimulatorFramebufferDidTerminateNotification";
 NSString *const FBSimulatorApplicationProcessDidLaunchNotification = @"FBSimulatorApplicationProcessDidLaunchNotification";
 NSString *const FBSimulatorApplicationProcessDidTerminateNotification = @"FBSimulatorApplicationProcessDidTerminateNotification";
 NSString *const FBSimulatorAgentProcessDidLaunchNotification = @"FBSimulatorAgentProcessDidLaunchNotification";
@@ -22,6 +24,7 @@ NSString *const FBSimulatorStateDidChange = @"FBSimulatorStateDidChange";
 
 NSString *const FBSimulatorExpectedTerminationKey = @"expected";
 NSString *const FBSimulatorProcessKey = @"process";
+NSString *const FBSimulatorFramebufferKey = @"framebuffer";
 NSString *const FBSimulatorDiagnosticName = @"diagnostic_name";
 NSString *const FBSimulatorDiagnosticValue = @"diagnostic_value";
 NSString *const FBSimulatorStateKey = @"simulator_state";
@@ -55,6 +58,21 @@ NSString *const FBSimulatorStateKey = @"simulator_state";
   [self materializeNotification:FBSimulatorContainerDidTerminateNotification userInfo:@{
     FBSimulatorExpectedTerminationKey : @(expected),
     FBSimulatorProcessKey : applicationProcess
+  }];
+}
+
+- (void)framebufferDidStart:(FBSimulatorFramebuffer *)framebuffer
+{
+  [self materializeNotification:FBSimulatorFramebufferDidStartNotification userInfo:@{
+    FBSimulatorFramebufferKey : framebuffer,
+  }];
+}
+
+- (void)framebufferDidTerminate:(FBSimulatorFramebuffer *)framebuffer expected:(BOOL)expected
+{
+  [self materializeNotification:FBSimulatorFramebufferDidTerminateNotification userInfo:@{
+    FBSimulatorExpectedTerminationKey : @(expected),
+    FBSimulatorFramebufferKey : framebuffer,
   }];
 }
 
