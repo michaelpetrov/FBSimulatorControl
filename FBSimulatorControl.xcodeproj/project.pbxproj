@@ -2321,6 +2321,8 @@
 					DVTiPhoneSimulatorRemoteClient,
 					"-weak_framework",
 					CoreSimulator,
+					"-weak_framework",
+					SimulatorKit,
 				);
 			};
 			name = Debug;
@@ -2365,6 +2367,8 @@
 					DVTiPhoneSimulatorRemoteClient,
 					"-weak_framework",
 					CoreSimulator,
+					"-weak_framework",
+					SimulatorKit,
 				);
 			};
 			name = Profile;
@@ -2409,6 +2413,8 @@
 					DVTiPhoneSimulatorRemoteClient,
 					"-weak_framework",
 					CoreSimulator,
+					"-weak_framework",
+					SimulatorKit,
 				);
 			};
 			name = Release;
@@ -2456,10 +2462,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSimulatorControlTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -2501,10 +2503,6 @@
 				INFOPLIST_FILE = "FBSimulatorControlTests/FBSimulatorControlTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSimulatorControlTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -2546,10 +2544,6 @@
 				INFOPLIST_FILE = "FBSimulatorControlTests/FBSimulatorControlTests-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-ObjC",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSimulatorControlTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
