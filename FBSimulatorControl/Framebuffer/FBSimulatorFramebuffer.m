@@ -18,6 +18,7 @@
 #import "FBFramebufferCounter.h"
 #import "FBFramebufferDebugWindow.h"
 #import "FBFramebufferDelegate.h"
+#import "FBFramebufferVideo.h"
 #import "FBSimulator.h"
 #import "FBSimulatorEventSink.h"
 #import "FBSimulatorLaunchConfiguration.h"
@@ -59,6 +60,11 @@ static const NSInteger FBFramebufferLogFrameFrequency = 100;
   if (useWindow) {
     [sinks addObject:[FBFramebufferDebugWindow withName:@"Simulator"]];
   }
+  if (launchConfiguration.videoPath) {
+    NSDecimalNumber *scaleNumber = [NSDecimalNumber decimalNumberWithString:launchConfiguration.scaleString];
+    [sinks addObject:[FBFramebufferVideo withPath:launchConfiguration.videoPath scale:scaleNumber.floatValue logger:simulator.logger eventSink:simulator.eventSink]];
+  }
+
   FBFramebufferCounter *counter = [FBFramebufferCounter withLogFrequency:FBFramebufferLogFrameFrequency logger:simulator.logger];
   [sinks addObject:counter];
 
